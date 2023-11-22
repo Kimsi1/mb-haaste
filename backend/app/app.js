@@ -6,15 +6,36 @@ import routes from './routes.js'
 
 const app = express()
 
-// MB-TODO: What are middlewares in Express?
-// MB-TODO: What these middlewares do?
+/**
+ * Middleware functions in Express are essentially the building blocks that allow you to add functionality to your application. 
+ * They are executed sequentially in the order they are added to the application.
+ * 
+ * To load the middleware function, call app.use(), specifying the middleware function.
+ * 
+ * Source: https://expressjs.com/en/guide/writing-middleware.html
+ */
+
+
+// Express middleware: https://expressjs.com/en/resources/middleware.html
+
+// Parse incoming JSON payloads and make the parsed data available in req.body
 app.use(express.json())
+
+// Parse incoming URL-encoded payloads, allowing for nested objects.
 app.use(express.urlencoded({ extended: true }))
+
+// Enhance security by setting various HTTP headers.
 app.use(helmet())
+
+// HTTP request logger. 'tiny' is a predefined, concise log format.
 app.use(morgan('tiny'))
 
+// Add the routes defined in the routes.js.
 app.use(routes)
 
+// Development error-handling/debugging, defined in errorHandler.js
 app.use(errorHandler)
 
+
 export default app
+
