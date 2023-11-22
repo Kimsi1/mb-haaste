@@ -21,7 +21,7 @@ const createModel = key => ({
   // Get all items from the specified key
   getAll: async () => {
     const items = await db.getObjectDefault(`.${key}`, {})
-    return Object.values(items)
+    return Object.values(items).map(item => ({ ...item, id: item.id }));
   },
   // Get a specific item by ID from the specified key
   get: async (id) => db.getObject(`.${key}.${id}`),
@@ -68,12 +68,22 @@ const createOneToManyModel = (key, modifier) => ({
   // Delete a specific item related to a parent item
   delete: async (parentId, subId) => {
     const items = await db.getObjectDefault(`.${key}.${parentId}`, [])
+    const deletedItem = items.find(item => item.subId === subId)
     const filtered = items.filter(item => item.subId !== subId)
     await db.push(`.${key}.${parentId}`, filtered, true)
-    return
+    return deletedItem
   },
   // Delete all items related to a parent item
-  deleteAll: async (parentId) => db.delete(`.${key}.${parentId}`),
+  deleteAll: async (parentId) => {
+    try {
+      const items = await db.getObject(`.${key}.${parentId}`);
+      await db.delete(`.${key}.${parentId}`);
+      return items || [];
+    } catch (error) {
+      console.error(`Error deleting all items from ${key}:`, error);
+      throw error;
+    }
+  },
 })
 
 // Exporting models for 'customers', 'contacts', and 'customerContacts'

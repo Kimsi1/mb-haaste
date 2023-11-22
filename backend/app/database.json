@@ -1,6 +1,30 @@
 {
-    "customers": {},
-    "contacts": {},
+    "customers": {
+        "id-17795": {
+            "id": "id-17795",
+            "name": "Farrell LLC",
+            "country": "Spain",
+            "isActive": true
+        },
+        "id-19658": {
+            "id": "id-19658",
+            "name": "McCullough, Marks and Satterfield",
+            "country": "Uruguay",
+            "isActive": true
+        }
+    },
+    "contacts": {
+        "id-6892": {
+            "id": "id-6892",
+            "firstName": "Mr. Jennings Labadie",
+            "lastName": "Rogahn"
+        },
+        "id-12918": {
+            "id": "id-12918",
+            "firstName": "Eulah Dare",
+            "lastName": "Dickens"
+        }
+    },
     "customerContacts": {
         "customerId-1": []
     }

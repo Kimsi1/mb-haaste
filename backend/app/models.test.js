@@ -34,7 +34,7 @@ const testContactModel = async () => {
     const all = await Contacts.getAll();
     console.log('all', all);
 
-    const newItem = await Contacts.add({ name: 'Cust.Omer' });
+    const newItem = await Contacts.add({ name: 'Cont.Act' });
     console.log('newItem', newItem);
 
     const single = await Contacts.get(newItem.id);
