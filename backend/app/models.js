@@ -40,7 +40,16 @@ const createModel = key => ({
     return data
   },
   // Delete an item by ID from the specified key
-  delete: async (id) => db.delete(`.${key}.${id}`)
+  delete: async (id) => {
+    try {
+      const deletedItem = await db.getObject(`.${key}.${id}`);
+      await db.delete(`.${key}.${id}`);
+      return deletedItem;
+    } catch (error) {
+      console.error(`Error deleting item from ${key}:`, error);
+      throw error;
+    }
+  },
 })
 
 // Function to create a model for a one-to-many relationship
