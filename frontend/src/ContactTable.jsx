@@ -8,9 +8,9 @@ const Table = ({ contacts }) => {
       {/* Table header with columns: Index, Name, Country */}
       <thead>
         <tr>
-          <th scope="col">#</th> {/* Index column */}
-          <th scope="col">Name</th> {/* Name column */}
-          <th scope="col">Country</th> {/* Country column */}
+          <th scope="col">#</th> 
+          <th scope="col">Name</th> 
+          <th scope="col">Country</th> 
         </tr>
       </thead>
       {/* Table body with contact information */}
@@ -18,9 +18,9 @@ const Table = ({ contacts }) => {
         {contacts.map((contact, index) => {
           return (
             <tr key={index}>
-              <th scope="row">{index + 1}</th> {/* Index of the contact */}
-              <td>{`${contact.firstName} ${contact.lastName}`}</td> {/* Full name of the contact */}
-              <td>{contact.country}</td> {/* Added a column for 'Country' */}
+              <th scope="row">{index + 1}</th> 
+              <td>{`${contact.firstName} ${contact.lastName}`}</td> 
+              <td>{contact.country}</td> 
             </tr>
           );
         })}
@@ -35,7 +35,7 @@ Table.propTypes = {
     PropTypes.shape({
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      country: PropTypes.string, // Added 'country' prop type
+      country: PropTypes.string, 
     })
   ),
 };
