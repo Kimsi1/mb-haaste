@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 
-import PropTypes from 'prop-types';
 
 // Functional component for rendering a table of contacts
 const Table = ({ contacts }) => {
