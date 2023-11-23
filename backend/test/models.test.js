@@ -9,7 +9,6 @@ const logResults = (label, result) => {
 
 describe('Customer Model', () => {
   before(async () => {
-    // You might want to initialize or clean up some data before running the tests
   });
 
   it('should perform CRUD operations on Customers', async () => {
@@ -38,7 +37,7 @@ describe('Customer Model', () => {
       // Use Chai assertions to check expectations
       expect(all).to.be.an('array');
       expect(newItem).to.have.property('name', 'Cust.Omer');
-      // Add more assertions based on your specific data and expectations
+      // TODO: Add more assertions
     } catch (error) {
       throw new Error(`Error in testCustomerModel: ${error}`);
     }
@@ -47,7 +46,6 @@ describe('Customer Model', () => {
 
 describe('Contact Model', () => {
   before(async () => {
-    // You might want to initialize or clean up some data before running the tests
   });
 
   it('should perform CRUD operations on Contacts', async () => {
@@ -76,7 +74,7 @@ describe('Contact Model', () => {
       // Use Chai assertions to check expectations
       expect(all).to.be.an('array');
       expect(newItem).to.have.property('name', 'Cont.Act');
-      // Add more assertions based on your specific data and expectations
+      // TODO: Add more assertions
     } catch (error) {
       throw new Error(`Error in testContactModel: ${error}`);
     }
@@ -85,7 +83,6 @@ describe('Contact Model', () => {
 
 describe('CustomerContact Model', () => {
   before(async () => {
-    // You might want to initialize or clean up some data before running the tests
   });
 
   it('should perform operations on CustomerContacts', async () => {
@@ -110,7 +107,7 @@ describe('CustomerContact Model', () => {
 
       // Use Chai assertions to check expectations
       expect(all).to.be.an('array');
-      // Add more assertions based on your specific data and expectations
+      // TODO: Add more assertions
     } catch (error) {
       throw new Error(`Error in testCustomerContactModel: ${error}`);
     }

@@ -115,3 +115,5 @@ const createOneToManyModel = (key, modifier) => ({
 export const Customers = createModel('customers')
 export const Contacts = createModel('contacts')
 export const CustomerContacts = createOneToManyModel('customerContacts', ({ parentId, subId }) => ({ customerId: parentId, contactId: subId }))
+
+
