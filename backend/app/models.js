@@ -24,7 +24,14 @@ const createModel = key => ({
     return Object.values(items).map(item => ({ ...item, id: item.id }));
   },
   // Get a specific item by ID from the specified key
-  get: async (id) => db.getObject(`.${key}.${id}`),
+  get: async (id) => {
+    try {
+      return await db.getObject(`.${key}.${id}`);
+    } catch (error) {
+      console.error(`Error getting item ${id} from ${key}:`, error);
+      throw error;
+    }
+  },
   // Add a new item to the specified key
   add: async (data) => {
     const id = getId()
@@ -34,10 +41,13 @@ const createModel = key => ({
   },
   // Update an existing item in the specified key
   update: async (id, data) => {
-    await db.push(`.${key}`, {
-      [id]: data
-    }, false)
-    return data
+    try {
+      await db.push(`.${key}`, { [id]: data }, false);
+      return data;
+    } catch (error) {
+      console.error(`Error updating item ${id} in ${key}:`, error);
+      throw error;
+    }
   },
   // Delete an item by ID from the specified key
   delete: async (id) => {
@@ -56,22 +66,37 @@ const createModel = key => ({
 const createOneToManyModel = (key, modifier) => ({
   // Get all items related to a parent item
   getAll: async (parentId) => {
-    const items = await db.getObjectDefault(`.${key}.${parentId}`, [])
-    return items.map(modifier)
+    try {
+      const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
+      return items.map(modifier);
+    } catch (error) {
+      console.error(`Error getting all items for parent ${parentId} from ${key}:`, error);
+      throw error;
+    }
   },
   // Add a new item related to a parent item
   add: async (parentId, subId) => {
-    const newItem = { parentId, subId }
-    await db.push(`.${key}.${parentId}[]`, newItem)
-    return modifier(newItem)
+    try {
+      const newItem = { parentId, subId };
+      await db.push(`.${key}.${parentId}[]`, newItem);
+      return modifier(newItem);
+    } catch (error) {
+      console.error(`Error adding item to ${key} for parent ${parentId}:`, error);
+      throw error;
+    }
   },
   // Delete a specific item related to a parent item
   delete: async (parentId, subId) => {
-    const items = await db.getObjectDefault(`.${key}.${parentId}`, [])
-    const deletedItem = items.find(item => item.subId === subId)
-    const filtered = items.filter(item => item.subId !== subId)
-    await db.push(`.${key}.${parentId}`, filtered, true)
-    return deletedItem
+    try {
+      const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
+      const deletedItem = items.find(item => item.subId === subId);
+      const filtered = items.filter(item => item.subId !== subId);
+      await db.push(`.${key}.${parentId}`, filtered, true);
+      return deletedItem;
+    } catch (error) {
+      console.error(`Error deleting item ${subId} from ${key} for parent ${parentId}:`, error);
+      throw error;
+    }
   },
   // Delete all items related to a parent item
   deleteAll: async (parentId) => {

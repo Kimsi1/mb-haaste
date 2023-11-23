@@ -40,22 +40,18 @@ routes.put('/api/customers/:customerId', async (req, res) => {
   try {
     // Extract customer ID from the request parameters
     const { customerId } = req.params;
-
     // Get the existing customer data
     const existingCustomer = await Customers.get(customerId);
-
     // If the customer doesn't exist, throw a NotFound error
     if (!existingCustomer) {
       throw new NotFound('Customer Not Found');
     }
-
     // Update the existing customer with the new data from the request body
     const updatedCustomer = await Customers.update(customerId, req.body);
-
     // Return the updated customer data in the response
     return res.send(updatedCustomer);
   } catch (error) {
-    // Handle errors and send an appropriate response
+    // Handle errors and return an appropriate response
     return res.status(500).send({ error: 'Internal Server Error' });
   }
 });
