@@ -7,7 +7,7 @@ const Table = ({ customers }) => {
 
   const clicker = (customer) => {
     navigate(customer.id);
-  }
+  };
 
   return (
     <>
@@ -31,25 +31,23 @@ const Table = ({ customers }) => {
           </tr>
         </thead>
         <tbody>
-          {customers.map((customer, index) => {
-            return (
-              <tr
-                key={index}
-                className=''
-                onClick={() => clicker(customer)}
-              >
-                <tr scope="row">{index + 1}</tr>
-                <td>{customer.name}</td>
-                <td>{customer.country}</td>
-                <td>{customer.isActive ? '✅' : '❌'}</td>
-              </tr>
-            )
-          })}
+          {customers.map((customer, index) => (
+            <tr
+              key={index}
+              className=''
+              onClick={() => clicker(customer)}
+            >
+              <td scope="row">{index + 1}</td>
+              <td>{customer.name}</td>
+              <td>{customer.country}</td>
+              <td>{customer.isActive ? '✅' : '❌'}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>
-  )
-}
+  );
+};
 
 Table.propTypes = {
   customers: PropTypes.arrayOf(PropTypes.shape({

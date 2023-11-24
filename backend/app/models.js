@@ -11,7 +11,7 @@
 import { JsonDB, Config } from 'node-json-db'
 
 // Create a new instance of JsonDB for database operations
-const db = new JsonDB(new Config('database', true, true, '.'))
+const db = new JsonDB(new Config('../database/database', true, true, '.'))
 
 // Function to generate a unique ID based on the current timestamp
 const getId = () => `id-${+(new Date()).getTime()}`
@@ -72,7 +72,7 @@ const createOneToManyModel = (key, modifier) => ({
     } catch (error) {
       console.error(`Error getting all items for parent ${parentId} from ${key}:`, error);
       throw error;
-    }
+    } 
   },
   // Add a new item related to a parent item
   add: async (parentId, subId) => {

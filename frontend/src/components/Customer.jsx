@@ -4,6 +4,7 @@ import useCustomer from '../hooks/useCustomer';
 import MBTodo from './Common/MBTodo';
 import CustomerContactTable from './Common/CustomerContactTable';
 import { useDispatch } from 'react-redux';
+import { updateCustomerData } from '../redux/customerSlices'
 
 const Customer = () => {
     // Extracting 'customerId' from the URL parameters
@@ -14,14 +15,19 @@ const Customer = () => {
     
     const dispatch = useDispatch();
   
-    const handleActivityUpdate = async () => {
+    const handleToggleActivity = async (newIsActive) => {
       try {
-        // Dispatch the updateCustomerActivity action
-        await dispatch(updateCustomerActivity({ customerId, isActivity: !customer.isActive }));
+        // Dispatch the updateCustomerData action with the updated isActive field
+        dispatch(updateCustomerData({
+          customerId: customer.id,
+          updatedData: { ...customer, isActive: newIsActive },
+        }));
       } catch (error) {
-        console.error('Error updating customer activity:', error);
+        console.error('Error updating customer data:', error);
       }
     };
+
+
     return (
       <div className='m-5'>
         <h1 className='fw-bold'>Customer</h1>
@@ -54,7 +60,7 @@ const Customer = () => {
                   {/* Display the current status as a button, and allow it to be clicked */}
                   <button
                     className={`btn btn-${customer.isActive ? 'success' : 'danger'}`}
-                    onClick={handleActivityUpdate}
+                    onClick={() => handleToggleActivity(!customer.isActive)}
                     type='button'
                   >
                     {customer.isActive ? 'Active' : 'Inactive'}

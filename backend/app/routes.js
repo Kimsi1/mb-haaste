@@ -40,6 +40,8 @@ routes.put('/api/customers/:customerId', async (req, res) => {
   try {
     // Extract customer ID from the request parameters
     const { customerId } = req.params;
+    console.log('customerId:', customerId);
+    console.log('req.body:', req.body);
     // Get the existing customer data
     const existingCustomer = await Customers.get(customerId);
     // If the customer doesn't exist, throw a NotFound error
@@ -51,6 +53,7 @@ routes.put('/api/customers/:customerId', async (req, res) => {
     // Return the updated customer data in the response
     return res.send(updatedCustomer);
   } catch (error) {
+    console.error('Error in route:', error);
     // Handle errors and return an appropriate response
     return res.status(500).send({ error: 'Internal Server Error' });
   }

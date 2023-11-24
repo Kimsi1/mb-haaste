@@ -87,7 +87,7 @@ const customersSlice = createSlice({
 
 
 
-      builder.addCase(updateCustomerActivity.pending, (state, action) => {
+      builder.addCase(updateCustomerData.pending, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'idle') {
           state.status = 'pending';
@@ -95,16 +95,22 @@ const customersSlice = createSlice({
         }
       });
   
-      builder.addCase(updateCustomerActivity.fulfilled, (state, action) => {
+      builder.addCase(updateCustomerData.fulfilled, (state, action) => {
         const { requestId } = action.meta;
+        console.log('Reducer: Handling fulfilled action for requestId:', requestId);
+      
         if (state.status === 'pending' && state.currentRequestId === requestId) {
+          console.log('Reducer: Updating state...');
           state.status = 'idle';
-          state.data = state.data.concat(action.payload)
+          state.data = state.data.map(customer => 
+            customer.id === action.payload.id ? action.payload : customer
+          );
           state.currentRequestId = null;
         }
       });
+      
   
-      builder.addCase(updateCustomerActivity.rejected, (state, action) => {
+      builder.addCase(updateCustomerData.rejected, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'pending' && state.currentRequestId === requestId) {
           state.status = 'idle';
@@ -148,16 +154,35 @@ export const fetchCustomerById = createAsyncThunk(
   }
 )
 
-export const updateCustomerActivity = createAsyncThunk(
-  'customers/updateActivity',
-  async ({ customerId, isActive }) => {
-    const result = await client(`/api/customers/${customerId}`, {
-      method: 'PUT',
-      data: { isActive },
-    });
-    return result;
+// Update customer data
+export const updateCustomerData = createAsyncThunk(
+  'customers/updateData',
+  async ({ customerId, updatedData }, { requestId, dispatch }) => {
+    console.log('updateCustomerData async action creator is called with customerId:', customerId);
+    
+    try {
+      const result = await client(`/api/customers/${customerId}`, {
+        data: updatedData,
+        method: 'PUT',
+      });
+
+      console.log('updateCustomerData successful response:', result);
+
+      // Dispatch the fulfilled action
+      dispatch(updateCustomerData.fulfilled(result, requestId));
+      
+      return result; // This value will be the payload of the fulfilled action
+    } catch (error) {
+      console.error('updateCustomerData error:', error);
+
+      // Dispatch the rejected action
+      dispatch(updateCustomerData.rejected(error, requestId));
+
+      throw error; // Re-throw the error to propagate it
+    }
   }
-)
+);
+
 
 export const createCustomer = createAsyncThunk(
   'customers/create',

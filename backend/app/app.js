@@ -27,8 +27,8 @@ app.use(express.urlencoded({ extended: true }))
 // Enhance security by setting various HTTP headers.
 app.use(helmet())
 
-// HTTP request logger. 'tiny' is a predefined, concise log format.
-app.use(morgan('tiny'))
+// HTTP request logger. 'tiny' and 'combined' are examples of predefined formats.
+app.use(morgan('combined'))
 
 // Add the routes defined in the routes.js.
 app.use(routes)
