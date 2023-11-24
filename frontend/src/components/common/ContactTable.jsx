@@ -1,16 +1,14 @@
-import PropTypes from 'prop-types'
-
+import PropTypes from 'prop-types';
 
 // Functional component for rendering a table of contacts
 const Table = ({ contacts }) => {
   return (
     <table className="table">
-      {/* Table header with columns: Index, Name, Country */}
+      {/* Table header with columns: Index, Name */}
       <thead>
         <tr>
-          <th scope="col">#</th> 
-          <th scope="col">Name</th> 
-          <th scope="col">Country</th> 
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
         </tr>
       </thead>
       {/* Table body with contact information */}
@@ -18,9 +16,8 @@ const Table = ({ contacts }) => {
         {contacts.map((contact, index) => {
           return (
             <tr key={index}>
-              <th scope="row">{index + 1}</th> 
-              <td>{`${contact.firstName} ${contact.lastName}`}</td> 
-              <td>{contact.country}</td> 
+              <th scope="row">{index + 1}</th>
+              <td>{`${contact.firstName} ${contact.lastName}`}</td>
             </tr>
           );
         })}
@@ -35,10 +32,8 @@ Table.propTypes = {
     PropTypes.shape({
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      country: PropTypes.string, 
     })
   ),
 };
 
-// Exporting the Table component
-export default Table;
+export default Table

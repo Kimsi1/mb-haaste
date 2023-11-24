@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { createCustomer } from './customerSlices'
+import { createCustomer } from '../../redux/customerSlices'
 
 const NewCustomer = () => {
   const dispatch = useDispatch()

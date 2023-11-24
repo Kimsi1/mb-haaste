@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { client } from './api';
+import { client } from '../api';
 
-// Initial state for the contacts slice in the Redux store
+// Initial state for the customerContacts slice in the Redux store
 const initialState = {
   data: [],
   status: 'idle',
@@ -9,17 +9,17 @@ const initialState = {
   currentRequestId: null,
 };
 
-// Creating a Redux slice for managing contact data
-const contactsSlice = createSlice({
-  name: 'contacts', 
+// Creating a Redux slice for managing customer contact data
+const customerContactsSlice = createSlice({
+  name: 'customerContacts', 
   initialState, 
-  reducers: {}, // Define reducers here
+  reducers: {},
   
   // Extra reducers handling different states during asynchronous operations
   extraReducers: (builder) => {
     builder
       // If the current status is 'idle', update to 'pending' and set the current request ID
-      .addCase(fetchContacts.pending, (state, action) => {
+      .addCase(fetchCustomerContacts.pending, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'idle') {
           state.status = 'pending';
@@ -27,7 +27,7 @@ const contactsSlice = createSlice({
         }
       })
       // If the status is 'pending' and matches the current request ID, update the state with the fetched data
-      .addCase(fetchContacts.fulfilled, (state, action) => {
+      .addCase(fetchCustomerContacts.fulfilled, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'pending' && state.currentRequestId === requestId) {
           state.status = 'idle';
@@ -36,7 +36,7 @@ const contactsSlice = createSlice({
         }
       })
       // If the status is 'pending' and matches the current request ID, update the state with the error information
-      .addCase(fetchContacts.rejected, (state, action) => {
+      .addCase(fetchCustomerContacts.rejected, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'pending' && state.currentRequestId === requestId) {
           state.status = 'idle';
@@ -47,22 +47,23 @@ const contactsSlice = createSlice({
   },
 });
 
-// Exporting the reducer from the slice
-export const contactReducer = contactsSlice.reducer;
+// Exporting the reducer and actions from the slice
+export const { addContact, removeContact } = customerContactsSlice.actions;
+export const customerContactsReducer = customerContactsSlice.reducer;
 
-// Creating an asynchronous thunk for fetching contact data
-export const fetchContacts = createAsyncThunk(
-  'contacts',
-  async () => {
-    // Fetching contact data from the backend and return results
-    const result = await client('/api/contacts');
+// Creating an asynchronous thunk for fetching customer contact data
+export const fetchCustomerContacts = createAsyncThunk(
+  'customerContacts',
+  async (customerId) => {
+    // Fetching customer contact data from the backend based on the customerId and return results
+    const result = await client(`/api/customer/${customerId}/contacts`);
     return result;
   },
   {
     // Condition to check if the current status is not 'pending' before making a new request
     condition: (_args, { getState }) => {
-      const { contacts } = getState();
-      return contacts.status !== 'pending';
+      const { customerContacts } = getState();
+      return customerContacts.status !== 'pending';
     },
   }
 );

@@ -1,6 +1,8 @@
 import './App.css';
-import ErrorPage from './ErrorPage';
-import { Contacts, Customer, Customers } from './Pages';
+import ErrorPage from './pages/ErrorPage';
+import Contacts from './components/Contacts';
+import Customer from './components/Customer';
+import Customers from './components/Customers';
 import mbLogo from './assets/mb-logo.svg';
 
 // Importing components and functions from 'react-router-dom' for routing
@@ -9,6 +11,7 @@ import {
   Outlet,
   Route,
   Routes,
+  RouterProvider,
   createBrowserRouter
 } from "react-router-dom";
 

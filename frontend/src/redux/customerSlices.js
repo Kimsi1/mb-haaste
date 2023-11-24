@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { client } from './api'
+import { client } from '../api'
 
 const initialState = {
   data: [],
@@ -84,6 +84,38 @@ const customersSlice = createSlice({
           state.currentRequestId = null
         }
       })
+
+
+
+      builder.addCase(updateCustomerActivity.pending, (state, action) => {
+        const { requestId } = action.meta;
+        if (state.status === 'idle') {
+          state.status = 'pending';
+          state.currentRequestId = requestId;
+        }
+      });
+  
+      builder.addCase(updateCustomerActivity.fulfilled, (state, action) => {
+        const { requestId } = action.meta;
+        if (state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle';
+          state.data = state.data.concat(action.payload)
+          state.currentRequestId = null;
+        }
+      });
+  
+      builder.addCase(updateCustomerActivity.rejected, (state, action) => {
+        const { requestId } = action.meta;
+        if (state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle';
+          state.error = action.error;
+          state.currentRequestId = null;
+        }
+      });
+
+
+
+      
   },
 })
 export const customerReducer = customersSlice.reducer
@@ -113,6 +145,17 @@ export const fetchCustomerById = createAsyncThunk(
       const { customers } = getState()
       return customers.status !== 'pending' && !customers.data.some(customer => customer.id === id)
     }
+  }
+)
+
+export const updateCustomerActivity = createAsyncThunk(
+  'customers/updateActivity',
+  async ({ customerId, isActive }) => {
+    const result = await client(`/api/customers/${customerId}`, {
+      method: 'PUT',
+      data: { isActive },
+    });
+    return result;
   }
 )
 
