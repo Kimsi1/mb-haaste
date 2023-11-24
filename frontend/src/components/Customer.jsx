@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import useCustomer from '../hooks/useCustomer';
-import MBTodo from './Common/MBTodo';
-import CustomerContactTable from './Common/CustomerContactTable';
+import MBTodo from './common/MBTodo';
+import CustomerContactTable from './common/CustomerContactTable';
 import { useDispatch } from 'react-redux';
 import { updateCustomerData } from '../redux/customerSlices'
 
@@ -11,7 +11,6 @@ const Customer = () => {
     const { customerId } = useParams();
     // Using the custom hook to fetch and manage individual customer data
     const { data: customer } = useCustomer(customerId);
-    // Function to handle toggling the activity
     
     const dispatch = useDispatch();
   
@@ -41,7 +40,7 @@ const Customer = () => {
             }}>
               {/* MB-TODO: Task for updating customer's 'isActivity' field */}
               <MBTodo
-                isCompleted={false}
+                isCompleted={true}
                 task='Create solution to update customers `isActivity` field. NOTE: update api `/api/customer/:customerId` expects complete customer data to be sent along request body' />
               {/* Form fields for customer details */}
               <div className='d-flex flex-row gap-4 mb-3'>

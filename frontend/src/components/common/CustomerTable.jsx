@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom';
-import MBTodo from './MBTodo';
+
 
 const Table = ({ customers }) => {
   const navigate = useNavigate();
@@ -11,16 +11,7 @@ const Table = ({ customers }) => {
 
   return (
     <>
-      <div className='card my-3'>
-        <div className='card-body'>
-          <i className="bi bi-filter" />
-          {' '}
-          Filters
-          <div>
-            <MBTodo isCompleted={false} task='Create solution to filters customers by activity' />
-          </div>
-        </div>
-      </div>
+      
       <table className="table table-hover">
         <thead>
           <tr>
