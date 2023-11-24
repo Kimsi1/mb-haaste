@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import useCustomer from '../hooks/useCustomer';
 import MBTodo from './Common/MBTodo';
 import CustomerContactTable from './Common/CustomerContactTable';
-
+import { useDispatch } from 'react-redux';
 
 const Customer = () => {
     // Extracting 'customerId' from the URL parameters

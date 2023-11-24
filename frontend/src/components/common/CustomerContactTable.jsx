@@ -38,7 +38,7 @@ const Table = ({ customerId }) => {
 }
 
 Table.propTypes = {
-  customerId: PropTypes.number.isRequired
+  customerId: PropTypes.string.isRequired
 }
 
 
