@@ -86,6 +86,31 @@ const customersSlice = createSlice({
       })
 
 
+      .addCase(createCustomerContacts.pending, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'idle') {
+          state.status = 'pending'
+          state.currentRequestId = requestId
+        }
+      })
+      .addCase(createCustomerContacts.fulfilled, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle'
+          state.data = state.data.concat(action.payload)
+          state.currentRequestId = null
+        }
+      })
+      .addCase(createCustomerContacts.rejected, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle'
+          state.error = action.error
+          state.currentRequestId = null
+        }
+      })
+
+
 
       builder.addCase(updateCustomerData.pending, (state, action) => {
         const { requestId } = action.meta;
@@ -109,7 +134,6 @@ const customersSlice = createSlice({
         }
       });
       
-  
       builder.addCase(updateCustomerData.rejected, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'pending' && state.currentRequestId === requestId) {
@@ -118,6 +142,8 @@ const customersSlice = createSlice({
           state.currentRequestId = null;
         }
       });
+
+      
 
 
 
@@ -192,4 +218,15 @@ export const createCustomer = createAsyncThunk(
   }
 )
 
+
 // MB-TODO: create action for creating customer contacts. NOTE: remember to add them to `customerSlice`
+export const createCustomerContacts = createAsyncThunk(
+  'customers/createContacts',
+  async ({ customerId, contactData }) => {
+    const result = await client(`/api/customers/${customerId}/contacts`, {
+      data: contactData,
+      method: 'POST',
+    });
+    return result.data; 
+  }
+);

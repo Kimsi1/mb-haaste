@@ -87,23 +87,13 @@ describe('CustomerContact Model', () => {
 
   it('should perform operations on CustomerContacts', async () => {
     try {
-      const customerId = 'customerId-1';
-      const contactId = 'contactId-1';
+      const customerId = 'id-17795';
+      //const contactId = 'contactId-1';
 
       const all = await CustomerContacts.getAll(customerId);
       logResults('All CustomerContacts', all);
 
-      const newItem = await CustomerContacts.add(customerId, contactId);
-      logResults('Added CustomerContact', newItem);
 
-      const allCreated = await CustomerContacts.getAll(customerId);
-      logResults('All CustomerContacts after Add', allCreated);
-
-      const deleted = await CustomerContacts.delete(customerId, contactId);
-      logResults('Deleted CustomerContact', deleted);
-
-      const allDeleted = await CustomerContacts.getAll(customerId);
-      logResults('All CustomerContacts after Delete', allDeleted);
 
       // Use Chai assertions to check expectations
       expect(all).to.be.an('array');

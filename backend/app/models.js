@@ -63,57 +63,47 @@ const createModel = key => ({
 })
 
 // Function to create a model for a one-to-many relationship
-const createOneToManyModel = (key, modifier) => ({
+const createOneToManyModel = key => ({
   // Get all items related to a parent item
   getAll: async (parentId) => {
     try {
       const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
-      return items.map(modifier);
+      return items;
     } catch (error) {
-      console.error(`Error getting all items for parent ${parentId} from ${key}:`, error);
+      console.error(`Error getting items for ${key} and parent ${parentId}:`, error);
       throw error;
-    } 
+    }
   },
   // Add a new item related to a parent item
   add: async (parentId, subId) => {
     try {
-      const newItem = { parentId, subId };
-      await db.push(`.${key}.${parentId}[]`, newItem);
-      return modifier(newItem);
+      const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
+      items.push(subId);
+      await db.push(`.${key}`, { [parentId]: items }, true);
+      return items;
     } catch (error) {
       console.error(`Error adding item to ${key} for parent ${parentId}:`, error);
       throw error;
     }
   },
-  // Delete a specific item related to a parent item
-  delete: async (parentId, subId) => {
+  // Remove an item related to a parent item
+  remove: async (parentId, subId) => {
     try {
       const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
-      const deletedItem = items.find(item => item.subId === subId);
-      const filtered = items.filter(item => item.subId !== subId);
-      await db.push(`.${key}.${parentId}`, filtered, true);
-      return deletedItem;
+      const index = items.indexOf(subId);
+      if (index !== -1) {
+        items.splice(index, 1);
+        await db.push(`.${key}`, { [parentId]: items }, true);
+      }
+      return items;
     } catch (error) {
-      console.error(`Error deleting item ${subId} from ${key} for parent ${parentId}:`, error);
+      console.error(`Error removing item from ${key} for parent ${parentId}:`, error);
       throw error;
     }
   },
-  // Delete all items related to a parent item
-  deleteAll: async (parentId) => {
-    try {
-      const items = await db.getObject(`.${key}.${parentId}`);
-      await db.delete(`.${key}.${parentId}`);
-      return items || [];
-    } catch (error) {
-      console.error(`Error deleting all items from ${key}:`, error);
-      throw error;
-    }
-  },
-})
+});
 
 // Exporting models for 'customers', 'contacts', and 'customerContacts'
-export const Customers = createModel('customers')
-export const Contacts = createModel('contacts')
-export const CustomerContacts = createOneToManyModel('customerContacts', ({ parentId, subId }) => ({ customerId: parentId, contactId: subId }))
-
-
+export const Customers = createModel('customers');
+export const Contacts = createModel('contacts');
+export const CustomerContacts = createOneToManyModel('customerContacts');

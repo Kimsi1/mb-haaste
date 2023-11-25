@@ -55,7 +55,6 @@ export const customerContactsReducer = customerContactsSlice.reducer;
 export const fetchCustomerContacts = createAsyncThunk(
   'customerContacts',
   async (customerId) => {
-    // Fetching customer contact data from the backend based on the customerId and return results
     const result = await client(`/api/customer/${customerId}/contacts`);
     return result;
   },

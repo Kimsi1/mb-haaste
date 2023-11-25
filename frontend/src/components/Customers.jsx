@@ -42,7 +42,7 @@ const Customers = () => {
           <div>
             <MBTodo isCompleted={false} task='Create solution to filters customers by activity' />
           
-          <div className="mb-3">
+          <div className='d-flex justify-content-between'>
             <button
               className={`btn ${showActive === null ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => setShowActive(null)}
