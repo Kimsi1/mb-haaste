@@ -21,6 +21,8 @@ const createModel = key => ({
   // Get all items from the specified key
   getAll: async () => {
     const items = await db.getObjectDefault(`.${key}`, {})
+    const answer = Object.values(items).map(item => ({ ...item, id: item.id }));
+    console.log(answer)
     return Object.values(items).map(item => ({ ...item, id: item.id }));
   },
   // Get a specific item by ID from the specified key
@@ -65,12 +67,17 @@ const createModel = key => ({
 // Function to create a model for a one-to-many relationship
 const createOneToManyModel = key => ({
   // Get all items related to a parent item
-  getAll: async (parentId) => {
+  getAll: async (contactId) => {
     try {
-      const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
-      return items;
+      const items = await db.getObjectDefault(`.${key}.${contactId}`, {} );
+      
+      // Flatten the array and map each element to an object with an 'id' property
+      const answer = [].concat(...Object.values(items).map(ids => ids.map(contactId => ({ contactId }))));
+      console.log(answer);
+
+      return answer;
     } catch (error) {
-      console.error(`Error getting items for ${key} and parent ${parentId}:`, error);
+      console.error(`Error getting items for ${key}:`, error);
       throw error;
     }
   },

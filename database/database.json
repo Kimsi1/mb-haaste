@@ -197,9 +197,11 @@
         }
     },
     "customerContacts": {
-        "id-17795": [
-            "id-12918"
-        ],
-        "customerId-1": []
+        "id-17795": {
+            "contactId": ["id-12918", "id-11638"]
+        },
+        "customerId-1": {
+
+        }
     }
 }

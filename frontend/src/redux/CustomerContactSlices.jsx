@@ -55,7 +55,7 @@ export const customerContactsReducer = customerContactsSlice.reducer;
 export const fetchCustomerContacts = createAsyncThunk(
   'customerContacts',
   async (customerId) => {
-    const result = await client(`/api/customer/${customerId}/contacts`);
+    const result = await client(`/api/customers/${customerId}/contacts`);
     return result;
   },
   {
