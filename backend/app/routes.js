@@ -93,8 +93,9 @@ routes.get('/api/customers/:customerId/contacts', async (req, res) => {
     const { customerId } = req.params;
     // Get all contacts related to the specified customer ID
     const customerContacts = await CustomerContacts.getAll(customerId);
-    // Map the contacts to get the contact details (excluding parentId and subId)
+    
     const contacts = customerContacts.map(({ customerId, contactId }) => ({ customerId, contactId }));
+    console.log(contacts)
     return res.send(contacts);
   } catch (error) {
     console.error('Error fetching contacts:', error);
@@ -104,10 +105,45 @@ routes.get('/api/customers/:customerId/contacts', async (req, res) => {
 });
 
 // MB-TODO: Create route for adding contact to a customer `/api/customers/:customerId/contacts`
+// Route for adding a contact to a customer
+routes.post('/api/customers/:customerId/contacts', async (req, res) => {
+  try {
+    console.log('received POST customerContact (routes)')
+    // Extract customer and contact IDs from the request parameters ID from the request parameters
+    const { customerId , contactId} = req.body;
+    console.log('req.body:',req.body)
+    // Add the contact to the specified customer
+    const updatedContacts = await CustomerContacts.add(customerId, contactId);
+    console.log('updatedContacts:', updatedContacts);
+    // Respond with the updated contacts
+    return res.send(updatedContacts);
+  } catch (error) {
+    console.error('Error adding contact:', error);
+    // Handle errors and return an appropriate response
+    return res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
 
 
 // MB-TODO: Create route for deleting contact of customer `/api/customers/:customerId/contacts/:contactId`
+// Route for deleting a contact of a customer
+routes.delete('/api/customers/:customerId/contacts/:contactId', async (req, res) => {
+  try {
+    console.log('received DELETE customerContact (routes)')
+    // Extract customer and contact IDs from the request parameters
+    const { customerId, contactId } = req.params;
 
+    // Remove the contact from the specified customer
+    const updatedContacts = await CustomerContacts.remove(customerId, contactId);
+
+    // Respond with the updated contacts
+    return res.send(updatedContacts);
+  } catch (error) {
+    console.error('Error deleting contact:', error);
+    // Handle errors and return an appropriate response
+    return res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
 
 
 // Export the Express router

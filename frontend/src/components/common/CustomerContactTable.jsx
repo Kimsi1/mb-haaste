@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCustomerContacts } from '../../redux/CustomerContactSlices'; // Update the path
+import { fetchCustomerContacts, deleteCustomerContact } from '../../redux/CustomerContactSlices'; // Update the path
 
 const Table = ({ customerId }) => {
   const dispatch = useDispatch();
+
+  
 
   // Fetch customer contacts when the component mounts or when customerId changes
   useEffect(() => {
@@ -12,10 +14,19 @@ const Table = ({ customerId }) => {
 
   // Retrieve customer contacts from the Redux store
   const { data: customerContacts, status } = useSelector((state) => state.customerContacts);
-
-  if (status === 'pending') {
-    return <div>Loading...</div>;
-  }
+  
+  
+  const handleDelete = async (contactId) => {
+    try {
+      // Dispatch the deleteCustomerContact action
+      dispatch(deleteCustomerContact({
+        customerId: customerId,
+        contactId: contactId,
+      }));
+    } catch (error) {
+      console.error('Error updating customer data:', error);
+    }
+  };
 
   return (
     <table className="table table-hover">
@@ -27,12 +38,12 @@ const Table = ({ customerId }) => {
         </tr>
       </thead>
       <tbody>
-        {customerContacts.map((customerContact, index) => (
+        {customerContacts && customerContacts.map((customerContact, index) => (
           <tr key={index}>
             <td scope="row">{index + 1}</td>
             <td>{customerContact.contactId}</td>
             <td>
-              <button className='btn btn-danger'>
+              <button className='btn btn-danger' onClick={() => handleDelete(customerContact.contactId)}>
                 Delete
               </button>
             </td>

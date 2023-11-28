@@ -43,7 +43,61 @@ const customerContactsSlice = createSlice({
           state.error = action.error;
           state.currentRequestId = null;
         }
-      });
+      })
+      .addCase(deleteCustomerContact.pending, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'idle') {
+          state.status = 'pending'
+          state.currentRequestId = requestId
+        }
+      })
+      .addCase(deleteCustomerContact.fulfilled, (state, action) => {
+        const { requestId } = action.meta;
+        if (state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle';
+          // Update state with the new data
+          state.data = action.payload
+      
+          state.currentRequestId = null;
+        }
+      })
+      
+      .addCase(deleteCustomerContact.rejected, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle'
+          state.error = action.error
+          state.currentRequestId = null
+        }
+      })
+      .addCase(createCustomerContacts.pending, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'idle') {
+          state.status = 'pending'
+          state.currentRequestId = requestId
+        }
+      })
+      .addCase(createCustomerContacts.fulfilled, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle'
+          state.data = action.payload
+          state.currentRequestId = null
+        }
+      })
+      .addCase(createCustomerContacts.rejected, (state, action) => {
+        const { requestId } = action.meta
+        if(state.status === 'pending' && state.currentRequestId === requestId) {
+          state.status = 'idle'
+          state.error = action.error
+          state.currentRequestId = null
+        }
+      })
+  
+  
+  
+  
+  
   },
 });
 
@@ -58,11 +112,36 @@ export const fetchCustomerContacts = createAsyncThunk(
     const result = await client(`/api/customers/${customerId}/contacts`);
     return result;
   },
-  {
-    // Condition to check if the current status is not 'pending' before making a new request
-    condition: (_args, { getState }) => {
-      const { customerContacts } = getState();
-      return customerContacts.status !== 'pending';
-    },
+  
+);
+
+export const createCustomerContacts = createAsyncThunk(
+  'customerContacts/create',
+  async ({ customerId, contactId }) => {
+    const result = await client(`/api/customers/${customerId}/contacts`, { 
+      data: {customerId, contactId}, 
+      method: 'POST' 
+    })
+    return result
+  }
+)
+
+export const deleteCustomerContact = createAsyncThunk(
+  'customerContacts/remove',
+  async ({ customerId, contactId }) => {
+    
+    try {
+      const result = await client(`/api/customers/${customerId}/contacts/${contactId}`, {
+        data: {customerId, contactId},
+        method: 'DELETE',
+      });
+      
+      return result; 
+    } catch (error) {
+      console.error('updateCustomerData error:', error);
+
+      throw error;
+    }
   }
 );
+

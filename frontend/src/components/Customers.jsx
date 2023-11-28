@@ -40,7 +40,7 @@ const Customers = () => {
           {' '}
           Filters
           <div>
-            <MBTodo isCompleted={false} task='Create solution to filters customers by activity' />
+            <MBTodo isCompleted={true} task='Create solution to filters customers by activity' />
           
           <div className='d-flex justify-content-between'>
             <button

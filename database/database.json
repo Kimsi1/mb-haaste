@@ -142,6 +142,12 @@
             "name": "Customer",
             "id": "id-1700733238323",
             "country": "Finland"
+        },
+        "id-1701211542372": {
+            "name": "Dummy",
+            "country": "Finland",
+            "isActive": false,
+            "id": "id-1701211542372"
         }
     },
     "contacts": {
@@ -197,11 +203,12 @@
         }
     },
     "customerContacts": {
-        "id-17795": {
-            "contactId": ["id-12918", "id-11638"]
-        },
-        "customerId-1": {
-
+        "customerIds": {
+            "id-41867": [
+                "id-3434654"
+            ],
+            "id-17795": [],
+            "id-19658": []
         }
     }
 }

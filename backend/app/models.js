@@ -22,7 +22,7 @@ const createModel = key => ({
   getAll: async () => {
     const items = await db.getObjectDefault(`.${key}`, {})
     const answer = Object.values(items).map(item => ({ ...item, id: item.id }));
-    console.log(answer)
+    //console.log(answer)
     return Object.values(items).map(item => ({ ...item, id: item.id }));
   },
   // Get a specific item by ID from the specified key
@@ -67,12 +67,19 @@ const createModel = key => ({
 // Function to create a model for a one-to-many relationship
 const createOneToManyModel = key => ({
   // Get all items related to a parent item
-  getAll: async (contactId) => {
+  getAll: async (customerId) => {
     try {
-      const items = await db.getObjectDefault(`.${key}.${contactId}`, {} );
-      
-      // Flatten the array and map each element to an object with an 'id' property
-      const answer = [].concat(...Object.values(items).map(ids => ids.map(contactId => ({ contactId }))));
+      console.log(customerId)
+      const items = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
+      console.log(items);
+
+      // Flatten the nested array and map each element to an object with a 'contactId' property
+      const answer = items.map(item => {
+        return {
+          customerId, 
+          contactId: item
+        }
+      })
       console.log(answer);
 
       return answer;
@@ -82,32 +89,69 @@ const createOneToManyModel = key => ({
     }
   },
   // Add a new item related to a parent item
-  add: async (parentId, subId) => {
+  add: async (customerId, contactId) => {
     try {
-      const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
-      items.push(subId);
-      await db.push(`.${key}`, { [parentId]: items }, true);
-      return items;
+      
+      // Ensure an array exists in the DB
+      const check =  await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`);
+      console.log(check);
+
+      // Create an array if it does not exist
+      if (typeof variable === 'undefined') {
+        await db.push(`.customerContacts.customerIds`, { [customerId]: [contactId] }, false );
+      } else {
+        // Push the new item to the array
+        await db.push(`.customerContacts.customerIds`, { [customerId]: contactId }, false);
+      }
+      // Return the updated array
+      const newItems = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
+      console.log(newItems);
+      const answer = newItems.map(item => {
+        return {
+          customerId, 
+          contactId: item
+        }
+      })
+      console.log("answer: ",answer);
+      return answer;
     } catch (error) {
-      console.error(`Error adding item to ${key} for parent ${parentId}:`, error);
+      console.error(`Error adding item: `, error);
       throw error;
     }
   },
   // Remove an item related to a parent item
-  remove: async (parentId, subId) => {
+  remove: async (customerId, contactId) => {
     try {
-      const items = await db.getObjectDefault(`.${key}.${parentId}`, []);
-      const index = items.indexOf(subId);
-      if (index !== -1) {
-        items.splice(index, 1);
-        await db.push(`.${key}`, { [parentId]: items }, true);
-      }
-      return items;
+      console.log('received DELETE customerContact (models)');
+  
+      // Get the existing items from the database
+      const items = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
+      console.log(items);
+
+      // Flatten the nested array and map each element to an object with a 'contactId' property
+      
+      const newContacts = items.filter(contact => contact !== contactId && contact !== null );
+      console.log(newContacts);
+      await db.push(`.customerContacts.customerIds.${customerId}`, newContacts );
+      const newItems = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
+      console.log(newItems);
+      const answer = newItems.map(item => {
+        return {
+          customerId, 
+          contactId: item
+        }
+      })
+      return answer;
     } catch (error) {
-      console.error(`Error removing item from ${key} for parent ${parentId}:`, error);
+      console.error(`Error removing item from customerContacts for parent:`, error);
       throw error;
     }
   },
+  
+  
+  
+  
+  
 });
 
 // Exporting models for 'customers', 'contacts', and 'customerContacts'

@@ -5,6 +5,7 @@ import MBTodo from './common/MBTodo';
 import CustomerContactTable from './common/CustomerContactTable';
 import { useDispatch } from 'react-redux';
 import { updateCustomerData } from '../redux/customerSlices'
+import { NewCustomerContact } from './common/NewCustomerContact';
 
 const Customer = () => {
     // Extracting 'customerId' from the URL parameters
@@ -68,13 +69,15 @@ const Customer = () => {
               </div>
               {/* Button for saving changes */}
               <button className='btn btn-primary' type='submit'>Save</button>
+              <NewCustomerContact customerId={customerId} />
+
             </form>
             {/* Displaying customer contacts */}
             <div>
               <p className='fw-bold'>Customer contacts</p>
               {/* MB-TODO: Task for continuing CustomerContact table implementation */}
               <MBTodo
-                isCompleted={false}
+                isCompleted={true}
                 task='Continue CustomerContact table implementation' />
               {/* Component for displaying customer contacts */}
               <CustomerContactTable customerId={customerId} />
