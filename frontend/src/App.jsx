@@ -71,7 +71,7 @@ const Root = () => {
           <div className='m-5'>
             <h1 className='fw-bold'>MB-Challenge</h1>
             <p className="fs-3">Welcome to Mad Booster&apos;s recruit challenge!</p>
-            <p><i>Add instructions here</i></p>
+            <p><i>Click the links on the left to navigate.</i></p>
           </div>
         )}
         />
