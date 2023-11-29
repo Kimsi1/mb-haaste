@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import { useParams } from 'react-router-dom';
 import useCustomer from '../hooks/useCustomer';
 import MBTodo from './common/MBTodo';
@@ -12,8 +12,11 @@ const Customer = () => {
     const { customerId } = useParams();
     // Using the custom hook to fetch and manage individual customer data
     const { data: customer } = useCustomer(customerId);
-    
+    console.log(customer);
     const dispatch = useDispatch();
+    const [name, setName] = useState('')
+    const [country, setCountry] = useState('')
+    
   
     const handleToggleActivity = async (newIsActive) => {
       try {
@@ -26,7 +29,19 @@ const Customer = () => {
         console.error('Error updating customer data:', error);
       }
     };
+    const saveCustomerData = async (data) => {
+      try {
+        // Dispatch the updateCustomerData action with the updated isActive field
+        dispatch(updateCustomerData({
+          customerId: customer.id,
+          updatedData: { ...customer, name: data.name, country: data.country  },
+        }));
+      } catch (error) {
+        console.error('Error updating customer data:', error);
+      }
+    };
 
+    if(!customer) return 'loading..'
 
     return (
       <div className='m-5'>
@@ -47,11 +62,11 @@ const Customer = () => {
               <div className='d-flex flex-row gap-4 mb-3'>
                 <div>
                   <label htmlFor="name" className="form-label">Name</label>
-                  <input className="form-control" id="name" value={customer.name || ''} readOnly />
+                  <input className="form-control" id="name" value={name || customer.name} onChange={e => setName(e.target.value)} />
                 </div>
                 <div>
                   <label htmlFor="name" className="form-label">Country</label>
-                  <input className="form-control" id="country" value={customer.country || ''} readOnly />
+                  <input className="form-control" id="country" value={country || customer.country} onChange={e => setCountry(e.target.value)} />
                 </div>
                 <div>
                   <label htmlFor="isActive" className="form-label">
@@ -68,7 +83,14 @@ const Customer = () => {
                 </div>
               </div>
               {/* Button for saving changes */}
-              <button className='btn btn-primary' type='submit'>Save</button>
+              <button className='btn btn-primary' 
+                onClick={() => saveCustomerData( {
+                  name: document.getElementById('name').value, 
+                  country: document.getElementById('country').value
+                } 
+                )} type='button'>Save
+              </button>
+              
               <NewCustomerContact customerId={customerId} />
 
             </form>
