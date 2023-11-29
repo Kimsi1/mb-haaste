@@ -22,7 +22,6 @@ const createModel = key => ({
   getAll: async () => {
     const items = await db.getObjectDefault(`.${key}`, {})
     const answer = Object.values(items).map(item => ({ ...item, id: item.id }));
-    //console.log(answer)
     return Object.values(items).map(item => ({ ...item, id: item.id }));
   },
   // Get a specific item by ID from the specified key
@@ -69,34 +68,32 @@ const createOneToManyModel = key => ({
   // Get all items related to a parent item
   getAll: async (customerId) => {
     try {
-      console.log(customerId)
       const items = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
-      console.log(items);
-
-      // Flatten the nested array and map each element to an object with a 'contactId' property
       const answer = items.map(item => {
         return {
           customerId, 
           contactId: item
         }
       })
-      console.log(answer);
-
       return answer;
     } catch (error) {
       console.error(`Error getting items for ${key}:`, error);
       throw error;
     }
   },
+
   // Add a new item related to a parent item
   add: async (customerId, contactId) => {
     try {
-      
       // Ensure an array exists in the DB
       const check =  await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`);
-      console.log(check);
-
-      // Create an array if it does not exist
+      
+      // Replace the possible "dummy-id" with one more consistent looking
+      if (contactId === 'dummy-id') {
+        contactId = getId()
+      }
+      
+      // Create an array if it does not exist and push the new item
       if (typeof variable === 'undefined') {
         await db.push(`.customerContacts.customerIds`, { [customerId]: [contactId] }, false );
       } else {
@@ -105,14 +102,12 @@ const createOneToManyModel = key => ({
       }
       // Return the updated array
       const newItems = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
-      console.log(newItems);
       const answer = newItems.map(item => {
         return {
           customerId, 
           contactId: item
         }
       })
-      console.log("answer: ",answer);
       return answer;
     } catch (error) {
       console.error(`Error adding item: `, error);
@@ -122,19 +117,11 @@ const createOneToManyModel = key => ({
   // Remove an item related to a parent item
   remove: async (customerId, contactId) => {
     try {
-      console.log('received DELETE customerContact (models)');
-  
       // Get the existing items from the database
       const items = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
-      console.log(items);
-
-      // Flatten the nested array and map each element to an object with a 'contactId' property
-      
       const newContacts = items.filter(contact => contact !== contactId && contact !== null );
-      console.log(newContacts);
       await db.push(`.customerContacts.customerIds.${customerId}`, newContacts );
       const newItems = await db.getObjectDefault(`.customerContacts.customerIds.${customerId}`, []);
-      console.log(newItems);
       const answer = newItems.map(item => {
         return {
           customerId, 
@@ -147,11 +134,6 @@ const createOneToManyModel = key => ({
       throw error;
     }
   },
-  
-  
-  
-  
-  
 });
 
 // Exporting models for 'customers', 'contacts', and 'customerContacts'

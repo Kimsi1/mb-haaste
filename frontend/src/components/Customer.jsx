@@ -12,7 +12,6 @@ const Customer = () => {
     const { customerId } = useParams();
     // Using the custom hook to fetch and manage individual customer data
     const { data: customer } = useCustomer(customerId);
-    console.log(customer);
     const dispatch = useDispatch();
     const [name, setName] = useState('')
     const [country, setCountry] = useState('')
@@ -49,15 +48,16 @@ const Customer = () => {
         {/* Displaying customer details if available */}
         {customer
           ? <div>
-            {/* Form for updating customer details */}
-            <form className='mb-5' onSubmit={event => {
-              // MB-TODO: Handle customer update
-              event.preventDefault();
-            }}>
+              {/* Form for updating customer details */}
+              <form className='mb-5' onSubmit={event => {
+                // MB-TODO: Handle customer update
+                event.preventDefault();}}
+              >
               {/* MB-TODO: Task for updating customer's 'isActivity' field */}
               <MBTodo
                 isCompleted={true}
-                task='Create solution to update customers `isActivity` field. NOTE: update api `/api/customer/:customerId` expects complete customer data to be sent along request body' />
+                task='Create solution to update customers `isActivity` field. NOTE: update api `/api/customer/:customerId` expects complete customer data to be sent along request body' 
+              />
               {/* Form fields for customer details */}
               <div className='d-flex flex-row gap-4 mb-3'>
                 <div>
@@ -70,11 +70,14 @@ const Customer = () => {
                 </div>
                 <div>
                   <label htmlFor="isActive" className="form-label">
-                    Activity
+                    Activity (click to change):
                   </label>
+                </div>
+                <div>
                   {/* Display the current status as a button, and allow it to be clicked */}
                   <button
                     className={`btn btn-${customer.isActive ? 'success' : 'danger'}`}
+                    id="isActive"
                     onClick={() => handleToggleActivity(!customer.isActive)}
                     type='button'
                   >
@@ -82,33 +85,36 @@ const Customer = () => {
                   </button>
                 </div>
               </div>
-              {/* Button for saving changes */}
-              <button className='btn btn-primary' 
-                onClick={() => saveCustomerData( {
-                  name: document.getElementById('name').value, 
-                  country: document.getElementById('country').value
-                } 
-                )} type='button'>Save
-              </button>
-              
-              <NewCustomerContact customerId={customerId} />
-
+              <p>Edit details and click save</p>
+              <div className='d-flex flex-row gap-4 mb-3'>
+                <div>
+                  {/* Button for saving changes */}
+                  <button className='btn btn-primary' 
+                    onClick={() => saveCustomerData( {
+                      name: document.getElementById('name').value, 
+                      country: document.getElementById('country').value} )} 
+                    >Save
+                  </button>
+                </div>
+              </div>
             </form>
+            {/* MB-TODO: Task for continuing CustomerContact table implementation */}
+            <MBTodo
+              isCompleted={true}
+              task='Continue CustomerContact table implementation' 
+            />
             {/* Displaying customer contacts */}
-            <div>
+            <div className='d-flex justify-content-between'>
               <p className='fw-bold'>Customer contacts</p>
-              {/* MB-TODO: Task for continuing CustomerContact table implementation */}
-              <MBTodo
-                isCompleted={true}
-                task='Continue CustomerContact table implementation' />
-              {/* Component for displaying customer contacts */}
-              <CustomerContactTable customerId={customerId} />
+              {/* Component for creating a dummy customer contact */}
+              <NewCustomerContact customerId={customerId} />
             </div>
+            {/* Component for displaying customer contacts */}
+            <CustomerContactTable customerId={customerId} />
           </div>
-          : null
-        }
+        : null}
       </div>
-    );
-  };
+    )
+  }
 
 export default Customer

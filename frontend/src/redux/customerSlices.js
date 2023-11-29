@@ -85,69 +85,34 @@ const customersSlice = createSlice({
         }
       })
 
-
-      .addCase(createCustomerContacts.pending, (state, action) => {
-        const { requestId } = action.meta
-        if(state.status === 'idle') {
-          state.status = 'pending'
-          state.currentRequestId = requestId
-        }
-      })
-      .addCase(createCustomerContacts.fulfilled, (state, action) => {
-        const { requestId } = action.meta
-        if(state.status === 'pending' && state.currentRequestId === requestId) {
-          state.status = 'idle'
-          state.data = state.data.concat(action.payload)
-          state.currentRequestId = null
-        }
-      })
-      .addCase(createCustomerContacts.rejected, (state, action) => {
-        const { requestId } = action.meta
-        if(state.status === 'pending' && state.currentRequestId === requestId) {
-          state.status = 'idle'
-          state.error = action.error
-          state.currentRequestId = null
-        }
-      })
-
-
-
-      builder.addCase(updateCustomerData.pending, (state, action) => {
+      .addCase(updateCustomerData.pending, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'idle') {
           state.status = 'pending';
           state.currentRequestId = requestId;
         }
-      });
+      })
   
-      builder.addCase(updateCustomerData.fulfilled, (state, action) => {
+      .addCase(updateCustomerData.fulfilled, (state, action) => {
         const { requestId } = action.meta;
-        console.log('Reducer: Handling fulfilled action for requestId:', requestId);
       
         if (state.status === 'pending' && state.currentRequestId === requestId) {
-          console.log('Reducer: Updating state...');
           state.status = 'idle';
           state.data = state.data.map(customer => 
             customer.id === action.payload.id ? action.payload : customer
           );
           state.currentRequestId = null;
         }
-      });
+      })
       
-      builder.addCase(updateCustomerData.rejected, (state, action) => {
+      .addCase(updateCustomerData.rejected, (state, action) => {
         const { requestId } = action.meta;
         if (state.status === 'pending' && state.currentRequestId === requestId) {
           state.status = 'idle';
           state.error = action.error;
           state.currentRequestId = null;
         }
-      });
-
-      
-
-
-
-      
+      })
   },
 })
 export const customerReducer = customersSlice.reducer
@@ -184,16 +149,11 @@ export const fetchCustomerById = createAsyncThunk(
 export const updateCustomerData = createAsyncThunk(
   'customers/updateData',
   async ({ customerId, updatedData }, { requestId, dispatch }) => {
-    console.log('updateCustomerData async action creator is called with customerId:', customerId);
-    
     try {
       const result = await client(`/api/customers/${customerId}`, {
         data: updatedData,
         method: 'PUT',
-      });
-
-      console.log('updateCustomerData successful response:', result);
-
+      })
       // Dispatch the fulfilled action
       dispatch(updateCustomerData.fulfilled(result, requestId));
       
@@ -207,7 +167,7 @@ export const updateCustomerData = createAsyncThunk(
       throw error; // Re-throw the error to propagate it
     }
   }
-);
+)
 
 
 export const createCustomer = createAsyncThunk(
@@ -229,4 +189,4 @@ export const createCustomerContacts = createAsyncThunk(
     });
     return result.data; 
   }
-);
+)

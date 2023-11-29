@@ -93,11 +93,6 @@ const customerContactsSlice = createSlice({
           state.currentRequestId = null
         }
       })
-  
-  
-  
-  
-  
   },
 });
 
@@ -129,17 +124,14 @@ export const createCustomerContacts = createAsyncThunk(
 export const deleteCustomerContact = createAsyncThunk(
   'customerContacts/remove',
   async ({ customerId, contactId }) => {
-    
     try {
       const result = await client(`/api/customers/${customerId}/contacts/${contactId}`, {
         data: {customerId, contactId},
         method: 'DELETE',
       });
-      
       return result; 
     } catch (error) {
       console.error('updateCustomerData error:', error);
-
       throw error;
     }
   }

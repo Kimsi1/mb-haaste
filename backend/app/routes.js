@@ -40,8 +40,6 @@ routes.put('/api/customers/:customerId', async (req, res) => {
   try {
     // Extract customer ID from the request parameters
     const { customerId } = req.params;
-    console.log('customerId:', customerId);
-    console.log('req.body:', req.body);
     // Get the existing customer data
     const existingCustomer = await Customers.get(customerId);
     // If the customer doesn't exist, throw a NotFound error
@@ -95,7 +93,6 @@ routes.get('/api/customers/:customerId/contacts', async (req, res) => {
     const customerContacts = await CustomerContacts.getAll(customerId);
     
     const contacts = customerContacts.map(({ customerId, contactId }) => ({ customerId, contactId }));
-    console.log(contacts)
     return res.send(contacts);
   } catch (error) {
     console.error('Error fetching contacts:', error);
@@ -108,13 +105,10 @@ routes.get('/api/customers/:customerId/contacts', async (req, res) => {
 // Route for adding a contact to a customer
 routes.post('/api/customers/:customerId/contacts', async (req, res) => {
   try {
-    console.log('received POST customerContact (routes)')
     // Extract customer and contact IDs from the request parameters ID from the request parameters
     const { customerId , contactId} = req.body;
-    console.log('req.body:',req.body)
     // Add the contact to the specified customer
     const updatedContacts = await CustomerContacts.add(customerId, contactId);
-    console.log('updatedContacts:', updatedContacts);
     // Respond with the updated contacts
     return res.send(updatedContacts);
   } catch (error) {
@@ -129,7 +123,6 @@ routes.post('/api/customers/:customerId/contacts', async (req, res) => {
 // Route for deleting a contact of a customer
 routes.delete('/api/customers/:customerId/contacts/:contactId', async (req, res) => {
   try {
-    console.log('received DELETE customerContact (routes)')
     // Extract customer and contact IDs from the request parameters
     const { customerId, contactId } = req.params;
 

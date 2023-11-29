@@ -7,11 +7,11 @@ export const NewCustomerContact = ({customerId}) => {
   const createNewDummyCustomerContact = async () => {
     dispatch(createCustomerContacts({ 
         customerId: customerId,
-        contactId: "id-3434654" }))
+        contactId: "dummy-id" }))
   }
   
   return (
-    <button 
+    <button className='btn btn-outline-primary'
       onClick={() => createNewDummyCustomerContact()}>
       <i className="bi bi-plus" />
       {' '}
@@ -22,4 +22,3 @@ export const NewCustomerContact = ({customerId}) => {
 
 NewCustomerContact.propTypes = {}
 
-//export const NewCustomerContact(customerId);
