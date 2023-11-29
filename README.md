@@ -49,6 +49,6 @@ npm run dev --workspace backend
 # Starts react app with `vite` on http://localhost:3000
 npm run dev --workspace frontend
 
-# Search project for `MB-TODO` comments and start exploring
+
 ```
 ---
