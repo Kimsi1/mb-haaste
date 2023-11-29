@@ -7,7 +7,7 @@ const initialState = {
   status: 'idle',
   error: null,
   currentRequestId: null,
-};
+}
 
 // Creating a Redux slice for managing customer contact data
 const customerContactsSlice = createSlice({
@@ -94,7 +94,7 @@ const customerContactsSlice = createSlice({
         }
       })
   },
-});
+})
 
 // Exporting the reducer and actions from the slice
 export const { addContact, removeContact } = customerContactsSlice.actions;
@@ -108,7 +108,7 @@ export const fetchCustomerContacts = createAsyncThunk(
     return result;
   },
   
-);
+)
 
 export const createCustomerContacts = createAsyncThunk(
   'customerContacts/create',
@@ -135,5 +135,5 @@ export const deleteCustomerContact = createAsyncThunk(
       throw error;
     }
   }
-);
+)
 

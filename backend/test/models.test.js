@@ -5,11 +5,11 @@ import { Contacts, CustomerContacts, Customers } from '../app/models.js';
 // Helper function to log results
 const logResults = (label, result) => {
   console.log(`${label}:`, result);
-};
+}
 
 describe('Customer Model', () => {
   before(async () => {
-  });
+  })
 
   it('should perform CRUD operations on Customers', async () => {
     try {
@@ -79,21 +79,17 @@ describe('Contact Model', () => {
       throw new Error(`Error in testContactModel: ${error}`);
     }
   });
-});
+})
 
 describe('CustomerContact Model', () => {
   before(async () => {
-  });
+  })
 
   it('should perform operations on CustomerContacts', async () => {
     try {
       const customerId = 'id-17795';
-      //const contactId = 'contactId-1';
-
       const all = await CustomerContacts.getAll(customerId);
       logResults('All CustomerContacts', all);
-
-
 
       // Use Chai assertions to check expectations
       expect(all).to.be.an('array');
@@ -101,5 +97,5 @@ describe('CustomerContact Model', () => {
     } catch (error) {
       throw new Error(`Error in testCustomerContactModel: ${error}`);
     }
-  });
-});
+  })
+})

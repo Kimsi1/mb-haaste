@@ -7,11 +7,9 @@ const Table = ({ customers }) => {
 
   const clicker = (customer) => {
     navigate(customer.id);
-  };
-
+  }
   return (
-    <>
-      
+    <div>
       <table className="table table-hover">
         <thead>
           <tr>
@@ -36,9 +34,9 @@ const Table = ({ customers }) => {
           ))}
         </tbody>
       </table>
-    </>
-  );
-};
+    </div>
+  )
+}
 
 Table.propTypes = {
   customers: PropTypes.arrayOf(PropTypes.shape({
