@@ -40,7 +40,7 @@ Application manages list of customers and contacts. `Express` server provides re
 
 ```bash
 # Fork or clone the project
-git clone git@github.com:MadBooster/mb-haaste.git
+git clone https://github.com/Kimsi1/mb-haaste
 cd mb-haaste
 npm install
 # On separate windows/tabs
